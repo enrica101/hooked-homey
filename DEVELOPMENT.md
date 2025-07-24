@@ -10,8 +10,7 @@
 
 ## Week 2 Progress
 
-### July 24, 2025
-
+### Day 2 - July 24, 2025
 ### Backend Setup
 - ✅ Installed production and development dependencies
 - ✅ Created basic express server and CORS configuration
@@ -27,3 +26,10 @@
 - ✅ Initialized product controller with all GET/read operations
 - ✅ RESTful API routes with filtering (category, price, search, featured)
 - ✅ Proper error handling for all GET scenarios
+
+### Adding Typescript to existing Backend
+- ✅ Installed TypeScript Dependencies
+- ✅ Added Type Safety to all existing routes, models, controllers
+- ✅ Created Type Definitions File and Environment Variables Types
+- 🚧 **Challenge** Encountered dependency version error when starting development server
+- 🧠 **Learned:** Complete Dependency Reset with known working versions and created with minimal server test to resolve dev server issue

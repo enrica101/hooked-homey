@@ -1,9 +1,29 @@
-// src/scripts/seedData.js
-const mongoose = require('mongoose');
-const Product = require('../models/Product');
-require('dotenv').config();
 
-const sampleProducts = [
+import mongoose from 'mongoose';
+import Product, { IProduct, IMaterial, IDimensions } from '../models/Product';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
+// Define the structure for our sample products
+interface SampleProduct {
+  name: string;
+  description: string;
+  price: number;
+  category: 'scarves' | 'hats' | 'bags' | 'home-decor' | 'amigurumi' | 'blankets';
+  images: string[];
+  materials: IMaterial[];
+  dimensions?: IDimensions;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  timeToMake?: string;
+  inStock: boolean;
+  quantity: number;
+  featured: boolean;
+  tags: string[];
+}
+
+const sampleProducts: SampleProduct[] = [
   {
     name: "Cozy Winter Scarf",
     description: "Super soft merino wool scarf in sage green. Perfect for chilly mornings and adds a touch of elegance to any outfit.",
@@ -27,7 +47,7 @@ const sampleProducts = [
     featured: true,
     tags: ["winter", "cozy", "green", "wool"]
   },
-  
+
   {
     name: "Textured Cable Beanie",
     description: "Warm and stylish beanie with classic cable pattern. Available in multiple colors to match your style.",
@@ -46,7 +66,7 @@ const sampleProducts = [
     featured: false,
     tags: ["winter", "hat", "cable", "gray"]
   },
-  
+
   {
     name: "Cotton Market Tote",
     description: "Eco-friendly cotton tote perfect for grocery shopping or beach days. Sturdy handles and spacious interior.",
@@ -71,7 +91,7 @@ const sampleProducts = [
     featured: true,
     tags: ["eco-friendly", "market", "cotton", "beige"]
   },
-  
+
   {
     name: "Geometric Throw Pillow",
     description: "Modern geometric design in neutral tones. Includes removable cover for easy washing.",
@@ -83,7 +103,7 @@ const sampleProducts = [
       color: "Cream",
       weight: "dk"
     }, {
-      yarn: "Cotton Blend", 
+      yarn: "Cotton Blend",
       color: "Taupe",
       weight: "dk"
     }],
@@ -100,7 +120,7 @@ const sampleProducts = [
     featured: false,
     tags: ["geometric", "pillow", "neutral", "modern"]
   },
-  
+
   {
     name: "Adorable Bunny Amigurumi",
     description: "Handmade bunny in soft pastels. Perfect gift for little ones or bunny lovers of all ages.",
@@ -128,7 +148,7 @@ const sampleProducts = [
     featured: true,
     tags: ["amigurumi", "bunny", "pink", "gift", "cute"]
   },
-  
+
   {
     name: "Rainbow Granny Square Throw",
     description: "Classic granny square pattern in vibrant rainbow colors. Perfect for adding color to any room.",
@@ -154,28 +174,34 @@ const sampleProducts = [
   }
 ];
 
-const seedDatabase = async () => {
+const seedDatabase = async (): Promise<void> => {
   try {
+    // Check if MongoDB URI exists
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI environment variable is not defined');
+    }
+
     // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(mongoUri);
     console.log('🍃 Connected to MongoDB');
-    
+
     // Clear existing products
     await Product.deleteMany({});
     console.log('🗑️  Cleared existing products');
-    
-    // Insert sample products
-    const products = await Product.insertMany(sampleProducts);
+
+    // Insert sample products with proper typing
+    const products: IProduct[] = await Product.insertMany(sampleProducts);
     console.log(`🌱 Seeded ${products.length} products successfully!`);
-    
+
     // Display seeded products
-    products.forEach(product => {
+    products.forEach((product: IProduct) => {
       console.log(`   ✅ ${product.name} - $${product.price}`);
     });
-    
+
     process.exit(0);
   } catch (error) {
-    console.error('❌ Seeding failed:', error.message);
+    console.error('❌ Seeding failed:', error instanceof Error ? error.message : 'Unknown error');
     process.exit(1);
   }
 };
