@@ -44,7 +44,6 @@ app.get('/', (req, res) => {
 
 // Test route for products (expand later)
 app.get('/api/products', (req, res) =>{
-    console.log("Response ", res, "\nDatabase data ", mongoose.connection )
     res.json({
         message: 'Products endpoint working!', 
         // products: res,
