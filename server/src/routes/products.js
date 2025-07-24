@@ -1,10 +1,11 @@
+// src/routes/products.js
 const express = require('express');
 const {
     getProducts,
     getProductById,
     getProductsByCategory,
     getFeaturedProducts
-} = require('.../controller/productController')
+} = require('../controllers/productController');
 
 const router = express.Router();
 
@@ -19,11 +20,11 @@ router.get('/featured', getFeaturedProducts);
 
 // @route   GET /api/products/category/:category
 // @desc    Get products by specific category
-// @params   category:scarves, hats, bags, home-decor, amigurumi, blankets
+// @params  category: scarves, hats, bags, home-decor, amigurumi, blankets
 router.get('/category/:category', getProductsByCategory);
 
 // @route   GET /api/products/:id
-// @desc    Get products by specific ID
+// @desc    Get single product by ID
 // @params  id: MongoDB ObjectId
 router.get('/:id', getProductById);
 
