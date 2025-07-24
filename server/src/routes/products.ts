@@ -1,5 +1,5 @@
 // src/routes/products.ts
-import express from 'express';
+import express, { Request, Response } from 'express';
 import {
     getProducts,
     getProductById,
@@ -11,36 +11,43 @@ const router = express.Router();
 
 // IMPORTANT: Order matters! More specific routes first
 
-// GET /api/products/featured
+// @route   GET /api/products/featured
+// @desc    Get featured products only
 router.get('/featured', getFeaturedProducts);
 
-// GET /api/products/category/:category
+// @route   GET /api/products/category/:category
+// @desc    Get products by specific category
+// @params  category: scarves, hats, bags, home-decor, amigurumi, blankets
 // Make sure :category is properly defined
-router.get('/category/:category', (req, res, next) => {
+router.get('/category/:category', (req: Request, res: Response): void => {
     // Add validation middleware
     if (!req.params.category || req.params.category.trim() === '') {
-        return res.status(400).json({
+        res.status(400).json({
             success: false,
             error: 'Category parameter is required'
         });
+        return;
     }
-    next();
 }, getProductsByCategory);
 
-// GET /api/products/:id  
+// @route   GET /api/products/:id
+// @desc    Get single product by ID
+// @params  id: MongoDB ObjectId
 // Make sure :id is properly defined
-router.get('/:id', (req, res, next) => {
+router.get('/:id', (req: Request, res: Response): void => {
     // Add validation middleware
     if (!req.params.id || req.params.id.trim() === '') {
-        return res.status(400).json({
+        res.status(400).json({
             success: false,
             error: 'Product ID parameter is required'
         });
+        return;
     }
-    next();
 }, getProductById);
 
-// GET /api/products (this should be last)
+// @route   GET /api/products(this should be last)
+// @desc    Get all products with optional filtering
+// @query   ?category=scarves&featured=true&inStock=true&search=cozy
 router.get('/', getProducts);
 
 export default router;
